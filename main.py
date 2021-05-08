@@ -10,10 +10,11 @@ from mpl_toolkits.mplot3d import Axes3D
 
 def init_P_Q_set(K = 5):
 
-    df = pd.read_table("ml-1m/ratings.dat", encoding='utf-8', header=None, sep='::', engine='python')
+    df = pd.read_table("ml-1m/ratings.dat", encoding='utf-8',
+                       header=None, sep='::', engine='python')
     df.columns = ['UserID', 'MovieID', 'Rating', 'TimeStamp']
 
-    # 打乱顺序
+    # random order
     df = df.sample(frac=1)
 
     n_User = df['UserID'].max()
@@ -49,27 +50,16 @@ def optimize(P, Q, learning_rate, train_set):
     Pn = np.array(P, copy=True)
     Qn = np.array(Q, copy=True)
 
-    U, I, K = len(P), len(Q[0]), len(P[0])
-
     cost = 0
     n = 0
 
-    e_ui_map = {}
-
-    for u in range(1, U):
-
-        e_ui_map[u] = {}
-
-        for i in range(1, I):
-            if u in train_set.keys() and i in train_set[u].keys():
-                e_ui = train_set[u][i] - np.dot(P[u, :], Q[:, i])
-
-                e_ui_map[u][i] = e_ui
-
-                cost += e_ui**2
-                n += 1
-                Pn[u, :] = Pn[u, :] + learning_rate * e_ui * Q[:, i]
-                Qn[:, i] = Qn[:, i] + learning_rate * e_ui * P[u, :]
+    for u in train_set.keys():
+        for i in train_set[u].keys():
+            e_ui = train_set[u][i] - np.dot(P[u, :], Q[:, i])
+            cost += e_ui ** 2
+            n += 1
+            Pn[u, :] = Pn[u, :] + learning_rate * e_ui * Q[:, i]
+            Qn[:, i] = Qn[:, i] + learning_rate * e_ui * P[u, :]
 
     return Pn, Qn, (cost / n ) ** 0.5
 
@@ -137,7 +127,7 @@ def get_T(test_set):
     for u in test_set.keys():
         for i in test_set[u].keys():
             n += 1
-            if test_set[u][i] >= 4:
+            if test_set[u][i] >= 3.5:
                 T.append((u, i))
 
     return T
@@ -155,7 +145,6 @@ def get_R_PQ(P, Q, test_set):
 
 def cal_Precision_Recall(R, T):
     RT = [i for i in R if i in T]
-    # print(len(R))
     Precision = len(RT) / len(R)
     Recall = len(RT) / len(T)
 
@@ -239,6 +228,7 @@ if __name__ == '__main__':
     # Movie Median Rating Recommendation
     R_median = get_R_math(movie_rating, test_set, np.median)
     print("(3) Movie Median Rating Recommendation : Precision(%f), Recall(%f)" % cal_Precision_Recall(R_median, T))
+
 
 
 
