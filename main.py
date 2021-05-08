@@ -211,6 +211,7 @@ if __name__ == '__main__':
 
     # select_best_P_Q()
 
+    # the minimum cost when K=5, learning_rate=0.00022
     K = 5
     learning_rate = 0.000220
 
