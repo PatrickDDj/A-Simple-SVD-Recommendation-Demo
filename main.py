@@ -208,7 +208,7 @@ def plot_cost():
 
 
 if __name__ == '__main__':
-
+    # save P Q as txt files
     # select_best_P_Q()
 
     # the minimum cost when K=5, learning_rate=0.00022
