@@ -220,18 +220,23 @@ if __name__ == '__main__':
 
     P, Q = get_P_Q(K=K, learning_rate=learning_rate)
 
+    # evaluate P Q on Test Set
     evaluate(P, Q, test_set, Set="Test Set")
 
+    # plot 3-D Diagram
     plot_cost()
 
     R_PQ = get_R_PQ(P, Q, test_set)
     print("(1) P-Q Recommendation : Precision(%f), Recall(%f)" %cal_Precision_Recall(R_PQ, T))
 
+    # get movie rating
     movie_rating = get_movie_rating(train_set)
 
+    # Movie Average Rating Recommendation
     R_average = get_R_math(movie_rating, test_set, np.average)
     print("(2) Movie Average Rating Recommendation : Precision(%f), Recall(%f)" % cal_Precision_Recall(R_average, T))
 
+    # Movie Median Rating Recommendation
     R_median = get_R_math(movie_rating, test_set, np.median)
     print("(3) Movie Median Rating Recommendation : Precision(%f), Recall(%f)" % cal_Precision_Recall(R_median, T))
 
