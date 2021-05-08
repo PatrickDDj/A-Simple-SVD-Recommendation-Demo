@@ -1,8 +1,11 @@
 import os
-import threading
+import re
 
 import pandas as pd
 import numpy as np
+
+from matplotlib import pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 
 def init_P_Q_set(K = 5):
@@ -83,7 +86,7 @@ def train(P, Q, train_set, iterations=50, learning_rate=0.1):
     return P, Q
 
 
-def evaluate(P, Q, val_set):
+def evaluate(P, Q, val_set, Set="Val_Set"):
     R = np.dot(P, Q)
     cost = 0
     n = 0
@@ -93,7 +96,7 @@ def evaluate(P, Q, val_set):
             n += 1
     cost /= n
     cost = cost ** 0.5
-    print("Error on Val_Set : %f" % cost)
+    print("Error on %s : %f" % (Set, cost))
     return cost
 
 
@@ -180,23 +183,55 @@ def get_R_math(movie_rating, test_set, f=np.average):
     return R
 
 
+def plot_cost():
+    fig = plt.figure()
+    ax = Axes3D(fig)
+
+    X = []
+    Y = []
+    Z = []
+
+    for i in os.listdir("./PQ"):
+        r = re.findall(r"[-+]?\d*\.\d+|\d+", i)
+        if len(r) == 3:
+            X.append(int(r[0]))
+            Y.append(float(r[1]))
+            Z.append(float(r[2]))
+
+    ax = plt.subplot(111, projection='3d')
+    ax.plot_trisurf(X, Y, Z, color='grey')
+
+    ax.set_zlabel('cost')
+    ax.set_ylabel('learning_rate')
+    ax.set_xlabel('K')
+    plt.show()
+
 if __name__ == '__main__':
 
     # select_best_P_Q()
-    K = 5
-    learning_rate = 0.000220
 
-    _, _, train_set, val_set, test_set = init_P_Q_set(K=K)
-    T = get_T(test_set)
+    # K = 5
+    # learning_rate = 0.000220
+    #
+    # _, _, train_set, val_set, test_set = init_P_Q_set(K=K)
+    # T = get_T(test_set)
+    #
+    # P, Q = get_P_Q(K=K, learning_rate=learning_rate)
+    #
+    # evaluate(P, Q, test_set, Set="Test Set")
 
-    P, Q = get_P_Q(K=K, learning_rate=learning_rate)
-    R_PQ = get_R_PQ(P, Q, test_set)
-    print("(1) P-Q Recommendation : Precision(%f), Recall(%f)" %cal_Precision_Recall(R_PQ, T))
+    plot_cost()
 
-    movie_rating = get_movie_rating(train_set)
+    # R_PQ = get_R_PQ(P, Q, test_set)
+    # print("(1) P-Q Recommendation : Precision(%f), Recall(%f)" %cal_Precision_Recall(R_PQ, T))
+    #
+    # movie_rating = get_movie_rating(train_set)
+    #
+    # R_average = get_R_math(movie_rating, test_set, np.average)
+    # print("(2) Movie Average Rating Recommendation : Precision(%f), Recall(%f)" % cal_Precision_Recall(R_average, T))
+    #
+    # R_median = get_R_math(movie_rating, test_set, np.median)
+    # print("(3) Movie Median Rating Recommendation : Precision(%f), Recall(%f)" % cal_Precision_Recall(R_median, T))
 
-    R_average = get_R_math(movie_rating, test_set, np.average)
-    print("(2) Movie Average Rating Recommendation : Precision(%f), Recall(%f)" % cal_Precision_Recall(R_average, T))
 
-    R_median = get_R_math(movie_rating, test_set, np.median)
-    print("(3) Movie Median Rating Recommendation : Precision(%f), Recall(%f)" % cal_Precision_Recall(R_median, T))
+
