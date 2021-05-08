@@ -206,32 +206,33 @@ def plot_cost():
     ax.set_xlabel('K')
     plt.show()
 
+
 if __name__ == '__main__':
 
     # select_best_P_Q()
 
-    # K = 5
-    # learning_rate = 0.000220
-    #
-    # _, _, train_set, val_set, test_set = init_P_Q_set(K=K)
-    # T = get_T(test_set)
-    #
-    # P, Q = get_P_Q(K=K, learning_rate=learning_rate)
-    #
-    # evaluate(P, Q, test_set, Set="Test Set")
+    K = 5
+    learning_rate = 0.000220
+
+    _, _, train_set, val_set, test_set = init_P_Q_set(K=K)
+    T = get_T(test_set)
+
+    P, Q = get_P_Q(K=K, learning_rate=learning_rate)
+
+    evaluate(P, Q, test_set, Set="Test Set")
 
     plot_cost()
 
-    # R_PQ = get_R_PQ(P, Q, test_set)
-    # print("(1) P-Q Recommendation : Precision(%f), Recall(%f)" %cal_Precision_Recall(R_PQ, T))
-    #
-    # movie_rating = get_movie_rating(train_set)
-    #
-    # R_average = get_R_math(movie_rating, test_set, np.average)
-    # print("(2) Movie Average Rating Recommendation : Precision(%f), Recall(%f)" % cal_Precision_Recall(R_average, T))
-    #
-    # R_median = get_R_math(movie_rating, test_set, np.median)
-    # print("(3) Movie Median Rating Recommendation : Precision(%f), Recall(%f)" % cal_Precision_Recall(R_median, T))
+    R_PQ = get_R_PQ(P, Q, test_set)
+    print("(1) P-Q Recommendation : Precision(%f), Recall(%f)" %cal_Precision_Recall(R_PQ, T))
+
+    movie_rating = get_movie_rating(train_set)
+
+    R_average = get_R_math(movie_rating, test_set, np.average)
+    print("(2) Movie Average Rating Recommendation : Precision(%f), Recall(%f)" % cal_Precision_Recall(R_average, T))
+
+    R_median = get_R_math(movie_rating, test_set, np.median)
+    print("(3) Movie Median Rating Recommendation : Precision(%f), Recall(%f)" % cal_Precision_Recall(R_median, T))
 
 
 
