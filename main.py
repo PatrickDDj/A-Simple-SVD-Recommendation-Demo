@@ -130,7 +130,7 @@ def get_T(test_set):
             if test_set[u][i] >= 3.5:
                 T.append((u, i))
 
-    return T
+    return sorted(T)
 
 
 def get_R_PQ(P, Q, test_set):
@@ -140,7 +140,7 @@ def get_R_PQ(P, Q, test_set):
             if np.dot(P[u, :], Q[:, i]) >= 3.5:
                 R.append((u,i))
 
-    return R
+    return sorted(R)
 
 
 def cal_Precision_Recall(R, T):
@@ -169,7 +169,7 @@ def get_R_math(movie_rating, test_set, f=np.average):
         for i in test_set[u].keys():
             if i in movie_rating.keys() and movie_rating[i] >= 3.5:
                 R.append((u,i))
-    return R
+    return sorted(R)
 
 
 def plot_cost():
@@ -216,7 +216,7 @@ if __name__ == '__main__':
     plot_cost()
 
     R_PQ = get_R_PQ(P, Q, test_set)
-    print("(1) P-Q Recommendation : Precision(%f), Recall(%f)" %cal_Precision_Recall(R_PQ, T))
+    print("(1) P-Q Recommendation : Precision(%f), Recall(%f)" % cal_Precision_Recall(R_PQ, T))
 
     # get movie rating
     movie_rating = get_movie_rating(train_set)
