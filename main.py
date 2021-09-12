@@ -230,5 +230,3 @@ if __name__ == '__main__':
     print("(3) Movie Median Rating Recommendation : Precision(%f), Recall(%f)" % cal_Precision_Recall(R_median, T))
 
 
-
-
